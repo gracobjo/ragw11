@@ -190,6 +190,33 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
+## 5.1 Modelos locales: embeddings y LLM
+
+En este proyecto, **«modelos locales»** significa que el modelo **se ejecuta en tu máquina** y sus pesos están **almacenados en tu disco** (descargados o descargables). Hay dos tipos:
+
+### Modelo de embeddings
+
+| Campo | Descripción |
+|-------|-------------|
+| **Variable** | `EMBEDDING_MODEL` (por defecto: `sentence-transformers/all-MiniLM-L6-v2`) |
+| **Función** | Convierte el texto en vectores para la búsqueda semántica en ChromaDB. |
+| **Qué significa «local»** | La primera vez que ejecutas la app, `sentence-transformers` descarga el modelo desde Hugging Face (~80 MB) y lo guarda en caché (p. ej. `~/.cache/huggingface/`). A partir de ahí se ejecuta todo en tu PC; no se envían datos a servidores externos. |
+| **Qué hacer** | No hace falta nada especial. Si quieres usar otro modelo de embeddings, cámbialo en `.env`. |
+
+### Modelos LLM (generación de respuestas)
+
+Aquí «local» implica que **los pesos del modelo están ya descargados** en tu equipo (o se descargan al usarlo).
+
+| Backend | Cómo se «localizan» los modelos | Qué debe hacer el usuario |
+|---------|--------------------------------|---------------------------|
+| **Ollama** | Con `ollama pull nombre` o `ollama create nombre -f Modelfile`. Ollama descarga y almacena los modelos. | Descargar o crear modelos con esos comandos. Para GGUF de LM Studio: crear un Modelfile por modelo y ejecutar `ollama create nombre -f Modelfile`. |
+| **LM Studio** | Se descargan desde la interfaz de LM Studio; se guardan en `~/.lmstudio/models/` (o similar). | Descargar el modelo en LM Studio y arrancar el servidor local. |
+| **llamacpp** | Archivo `.gguf` en disco (descargado con LM Studio, desde Hugging Face, etc.). | Tener el `.gguf` y definir `GGUF_MODEL_PATH` en `.env` con la ruta completa. |
+
+**Resumen:** «Modelos locales» = modelos cuyos pesos están en tu máquina. El de embeddings se descarga automáticamente la primera vez; el LLM lo descargas tú (Ollama, LM Studio) o usas un archivo `.gguf` que ya tengas.
+
+---
+
 ## 6. Rutas del proyecto
 
 | Ruta | Contenido |
