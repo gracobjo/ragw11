@@ -35,6 +35,8 @@ EMBEDDING_MODEL = os.getenv(
     "EMBEDDING_MODEL",
     "sentence-transformers/all-MiniLM-L6-v2",
 )
+# Dispositivo para embeddings: "cpu" o "cuda" (GPU). En Ubuntu con NVIDIA: EMBEDDING_DEVICE=cuda
+EMBEDDING_DEVICE = os.getenv("EMBEDDING_DEVICE", "cpu").strip().lower()
 
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "500"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "50"))

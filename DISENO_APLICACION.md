@@ -49,16 +49,46 @@
 | **llm_provider.py** | Crea la instancia del LLM según el backend configurado (Ollama, LM Studio, llama-cpp). |
 | **ollama_utils.py** | Lista los modelos Ollama disponibles vía API. |
 | **agent.py** | Agente ReAct con herramientas: consultar documentos, fecha actual, estadística del índice. |
+| **api.py** | API REST FastAPI: consultas, indexación, informes, presentaciones, cuestionarios. Documentación Swagger en `/docs`. |
 
 ---
 
-## 3. Componentes del frontend
+## 3. API REST (Swagger)
+
+La API permite que otras aplicaciones consuman las funcionalidades RAG sin usar la interfaz Streamlit.
+
+| Recurso | Descripción |
+|---------|-------------|
+| **Arranque** | `uvicorn api:app --reload --host 0.0.0.0 --port 8000` o `run_api.bat` / `run_api.sh` |
+| **Swagger UI** | http://localhost:8000/docs |
+| **ReDoc** | http://localhost:8000/redoc |
+| **OpenAPI JSON** | http://localhost:8000/openapi.json |
+
+### Endpoints principales
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | /health | Comprueba que la API está operativa |
+| GET | /api/sources | Lista documentos indexados |
+| POST | /api/query | Consulta RAG (pregunta, k, source_filter) |
+| POST | /api/index/folder | Indexa carpeta por ruta |
+| POST | /api/index/upload | Sube e indexa archivos |
+| POST | /api/index/docs | Reindexa docs/ |
+| POST | /api/informe | Genera informe |
+| POST | /api/presentacion | Genera presentación |
+| POST | /api/cuestionario | Genera cuestionario |
+| GET | /api/models | Lista modelos Ollama |
+| POST | /api/models/select | Selecciona modelo Ollama |
+
+---
+
+## 4. Componentes del frontend
 
 La interfaz está organizada en una **barra lateral** y **cuatro pestañas** principales.
 
 ---
 
-### 3.1 Barra lateral
+### 4.1 Barra lateral
 
 #### 3.1.1 Conexión LLM
 
@@ -72,7 +102,7 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
-#### 3.1.2 Modo de respuesta
+#### 4.1.2 Modo de respuesta
 
 | Elemento | Para desarrolladores | Para usuarios |
 |----------|----------------------|---------------|
@@ -99,7 +129,7 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
-### 3.2 Pestaña Chat
+### 4.2 Pestaña Chat
 
 | Elemento | Para desarrolladores | Para usuarios |
 |----------|----------------------|---------------|
@@ -125,7 +155,7 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
-### 3.4 Pestaña Presentaciones
+### 4.4 Pestaña Presentaciones
 
 | Elemento | Para desarrolladores | Para usuarios |
 |----------|----------------------|---------------|
@@ -157,7 +187,7 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
-## 4. Flujo de trabajo recomendado (usuarios)
+## 5. Flujo de trabajo recomendado (usuarios)
 
 1. **Configuración inicial**
    - Instalar Python, dependencias (`pip install -r requirements.txt`) y Ollama.
@@ -177,7 +207,7 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ---
 
-## 5. Archivos de configuración
+## 6. Archivos de configuración
 
 | Archivo | Uso |
 |---------|-----|
@@ -215,9 +245,19 @@ Aquí «local» implica que **los pesos del modelo están ya descargados** en tu
 
 **Resumen:** «Modelos locales» = modelos cuyos pesos están en tu máquina. El de embeddings se descarga automáticamente la primera vez; el LLM lo descargas tú (Ollama, LM Studio) o usas un archivo `.gguf` que ya tengas.
 
+### Uso de GPU (Ubuntu con NVIDIA)
+
+| Componente | Variable | Valor para GPU |
+|------------|----------|----------------|
+| Embeddings | `EMBEDDING_DEVICE` | `cuda` |
+| llamacpp   | `LLAMA_N_GPU_LAYERS` | `-1` (todas las capas en GPU) |
+| Ollama     | — | Suele usar la GPU automáticamente si está disponible |
+
+Con `EMBEDDING_DEVICE=cuda` en `.env`, los embeddings se ejecutan en la GPU. Ollama detecta la GPU por sí mismo.
+
 ---
 
-## 6. Rutas del proyecto
+## 7. Rutas del proyecto
 
 | Ruta | Contenido |
 |------|-----------|
@@ -227,6 +267,7 @@ Aquí «local» implica que **los pesos del modelo están ya descargados** en tu
 
 ---
 
-## 7. Referencias
+## 8. Referencias
 
 - Casos de uso y diagramas UML: `CASOS_DE_USO_UML.md`.
+- Procedimiento de pruebas: `PROCEDIMIENTO_PRUEBAS.md`.

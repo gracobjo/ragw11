@@ -9,6 +9,17 @@ Proyecto alineado con la práctica *Sistema RAG Local con LM Studio y LangChain*
 - **[ESPECIFICACION_REQUISITOS.md](ESPECIFICACION_REQUISITOS.md)** — Especificación de requisitos funcionales y no funcionales.
 - **[DISENO_APLICACION.md](DISENO_APLICACION.md)** — Diseño de la aplicación: componentes del frontend (para desarrolladores y usuarios) y flujo de trabajo.
 - **[CASOS_DE_USO_UML.md](CASOS_DE_USO_UML.md)** — Casos de uso detallados y diagramas UML (Mermaid): secuencia, componentes, clases, actividad, estados.
+- **[PROCEDIMIENTO_PRUEBAS.md](PROCEDIMIENTO_PRUEBAS.md)** — Procedimiento de pruebas manuales y de API.
+
+## API REST (Swagger)
+
+Para exponer las funcionalidades a otras aplicaciones:
+
+```bash
+uvicorn api:app --reload --host 0.0.0.0 --port 8000
+```
+
+O usar `run_api.bat` (Windows) / `run_api.sh` (Linux). Documentación interactiva: http://localhost:8000/docs
 
 ## Requisitos
 
@@ -43,6 +54,26 @@ Si en Windows aparece un error de **archivo en uso** (`WinError 32`) al instalar
 
 Opcional: crea un archivo `.env` y ajusta variables (`LLM_BACKEND`, `OLLAMA_MODEL`, `LM_STUDIO_BASE_URL`, `GGUF_MODEL_PATH`, etc.).
 
+### Ejecución con GPU (Ubuntu / NVIDIA)
+
+Para usar la GPU en los embeddings y, si aplica, en el LLM:
+
+1. **Embeddings (sentence-transformers):** añade en `.env`:
+   ```
+   EMBEDDING_DEVICE=cuda
+   ```
+
+2. **Ollama:** en Ubuntu con NVIDIA, Ollama suele usar la GPU automáticamente. Verifica con `nvidia-smi` mientras Ollama está en uso.
+
+3. **Modo llamacpp:** si usas `LLM_BACKEND=llamacpp`, añade en `.env`:
+   ```
+   LLAMA_N_GPU_LAYERS=-1
+   ```
+   (usa todas las capas en GPU). Instala `llama-cpp-python` con soporte CUDA, por ejemplo:
+   ```bash
+   CMAKE_ARGS="-DGGML_CUDA=on" pip install llama-cpp-python --force-reinstall --no-cache-dir
+   ```
+
 ## Orden de uso
 
 1. **Si usas Ollama:** instálalo, ejecuta `ollama run qwen2.5:7b` y deja el servidor activo. **Si usas llamacpp:** configura `GGUF_MODEL_PATH` en `.env`.
@@ -66,8 +97,11 @@ Opcional: crea un archivo `.env` y ajusta variables (`LLM_BACKEND`, `OLLAMA_MODE
 | `llm_provider.py` | Ollama, LM Studio o GGUF local (`llama-cpp`). |
 | `agent.py`    | Agente ReAct: consulta RAG, fecha/hora y estadística del índice. |
 | `ollama_utils.py` | Lista modelos Ollama disponibles. |
-| `run.sh`      | Arranque en Ubuntu/Linux. |
-| `run.bat`     | Arranque en Windows. |
+| `api.py`      | API REST FastAPI con Swagger. |
+| `run_api.sh`  | Arranque API en Ubuntu/Linux. |
+| `run_api.bat` | Arranque API en Windows. |
+| `run.sh`      | Arranque Streamlit en Ubuntu/Linux. |
+| `run.bat`     | Arranque Streamlit en Windows. |
 
 ## Ejemplos de preguntas (sobre los TXT de ejemplo)
 

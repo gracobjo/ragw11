@@ -23,13 +23,17 @@ from config import (
     CHUNK_OVERLAP,
     CHUNK_SIZE,
     DOCS_DIR,
+    EMBEDDING_DEVICE,
     EMBEDDING_MODEL,
     ensure_dirs,
 )
 
 
 def get_embeddings() -> HuggingFaceEmbeddings:
-    return HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    kwargs: dict = {"model_name": EMBEDDING_MODEL}
+    if EMBEDDING_DEVICE and EMBEDDING_DEVICE != "cpu":
+        kwargs["model_kwargs"] = {"device": EMBEDDING_DEVICE}
+    return HuggingFaceEmbeddings(**kwargs)
 
 
 def get_splitter() -> RecursiveCharacterTextSplitter:
