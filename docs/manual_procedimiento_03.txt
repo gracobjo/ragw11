@@ -1,0 +1,5 @@
+Manual interno de procedimientos — Sección 3: Incidencias
+
+Las incidencias críticas deben registrarse en el sistema de tickets con prioridad P1 y notificar al guardia de servicio.
+Para incidencias no urgentes, use prioridad P3 y documente el impacto en usuarios.
+El manual no describe procedimientos de seguridad física en instalaciones externas.

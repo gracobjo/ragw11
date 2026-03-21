@@ -1,0 +1,9 @@
+# Qwen3-VL-8B (modelo visión-lenguaje). Requiere ambos archivos.
+# Uso: ollama create qwen3-vl:8b -f Modelfile.qwen3vl
+FROM C:\Users\chuwi\.lmstudio\models\lmstudio-community\Qwen3-VL-8B-Instruct-GGUF\Qwen3-VL-8B-Instruct-Q4_K_M.gguf
+FROM C:\Users\chuwi\.lmstudio\models\lmstudio-community\Qwen3-VL-8B-Instruct-GGUF\mmproj-Qwen3-VL-8B-Instruct-F16.gguf
+
+TEMPLATE """{{ .System }}
+{{ .Prompt }}"""
+
+PARAMETER temperature 0.2

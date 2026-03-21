@@ -1,0 +1,6 @@
+# Instalación de llama-cpp-python SIN compilar (Windows/Linux CPU).
+# Uso: pip install -r requirements-llamacpp.txt
+#
+# El índice extra sirve ruedas oficiales CPU; evita el error CMake/nmake en Windows.
+--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+llama-cpp-python>=0.2.55

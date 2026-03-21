@@ -1,0 +1,5 @@
+Manual interno de procedimientos — Sección 1: Acceso
+
+Los empleados deben solicitar acceso al sistema interno mediante el formulario IT-01 en el portal de la empresa.
+El plazo de respuesta habitual es de dos días laborables.
+No se comparten credenciales entre departamentos.
