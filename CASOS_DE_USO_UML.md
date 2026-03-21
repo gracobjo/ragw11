@@ -145,6 +145,18 @@ Los diagramas están en formato **Mermaid** y pueden visualizarse en editores co
 
 ---
 
+### UC-12: Configurar ejecución con GPU (Ubuntu / NVIDIA)
+
+| Campo | Descripción |
+|-------|-------------|
+| **Actor** | Usuario / Administrador |
+| **Precondiciones** | Sistema Ubuntu con GPU NVIDIA y drivers CUDA instalados. |
+| **Flujo principal** | 1. El usuario edita `.env` (o lo crea desde `.env.example`). 2. Añade `EMBEDDING_DEVICE=cuda` para que los embeddings (sentence-transformers) se ejecuten en la GPU. 3. Si usa `LLM_BACKEND=llamacpp`, añade `LLAMA_N_GPU_LAYERS=-1` para cargar todas las capas del modelo en GPU. 4. Reinicia la aplicación. Ollama usa la GPU automáticamente si está disponible. |
+| **Flujo alternativo** | Sin GPU o en Windows sin CUDA, se omite o se usa `EMBEDDING_DEVICE=cpu` (por defecto). |
+| **Postcondiciones** | La indexación y las consultas utilizan la GPU cuando está configurada, acelerando el procesamiento. |
+
+---
+
 ## 3. Diagrama de casos de uso
 
 ```mermaid
@@ -165,6 +177,7 @@ flowchart TB
         UC09[UC-09 Realizar cuestionario]
         UC10[UC-10 Seleccionar modelo]
         UC11[UC-11 Importar GGUF a Ollama]
+        UC12[UC-12 Configurar GPU]
     end
 
     U --> UC01
@@ -178,6 +191,7 @@ flowchart TB
     U --> UC09
     U --> UC10
     U --> UC11
+    U --> UC12
 
     UC08 -.->|incluye| UC09
     UC10 -.->|requiere modelos de| UC11

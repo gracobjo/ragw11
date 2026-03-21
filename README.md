@@ -11,6 +11,18 @@ Proyecto alineado con la práctica *Sistema RAG Local con LM Studio y LangChain*
 - **[CASOS_DE_USO_UML.md](CASOS_DE_USO_UML.md)** — Casos de uso detallados y diagramas UML (Mermaid): secuencia, componentes, clases, actividad, estados.
 - **[PROCEDIMIENTO_PRUEBAS.md](PROCEDIMIENTO_PRUEBAS.md)** — Procedimiento de pruebas manuales y de API.
 
+## Índice de documentación por tema
+
+| Tema | Dónde está |
+|------|------------|
+| **Configuración general** | `.env.example`, `README.md` |
+| **Modelos locales (embeddings y LLM)** | `DISENO_APLICACION.md` § 5.1 |
+| **Ejecución con GPU** | `README.md` (sección "Ejecución con GPU"), `DISENO_APLICACION.md` § 5.1, `ESPECIFICACION_REQUISITOS.md` (RF-22, glosario), `CASOS_DE_USO_UML.md` (UC-12), `.env.example` |
+| **Modelfile (importar GGUF a Ollama)** | `DISENO_APLICACION.md` § 5, `ESPECIFICACION_REQUISITOS.md` (RF-21), `Modelfile`, `Modelfile.qwen3vl` |
+| **API REST y Swagger** | `api.py`, `README.md`, `DISENO_APLICACION.md` § 3 |
+| **Procedimiento de pruebas** | `PROCEDIMIENTO_PRUEBAS.md` |
+| **Casos de uso y diagramas UML** | `CASOS_DE_USO_UML.md` |
+
 ## API REST (Swagger)
 
 Para exponer las funcionalidades a otras aplicaciones:

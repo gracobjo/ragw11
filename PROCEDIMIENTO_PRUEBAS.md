@@ -19,6 +19,7 @@ Antes de ejecutar las pruebas:
 2. **Ollama:** Instalado y en ejecución. Al menos un modelo disponible (`ollama list`).
 3. **Documentos de prueba:** Al menos un PDF, TXT o DOCX en `docs/` o disponible para subir.
 4. **API (opcional):** Si se prueban endpoints REST, arrancar la API con `uvicorn api:app --reload` o `python -m uvicorn api:app`.
+5. **GPU (opcional, Ubuntu):** Para pruebas con GPU, configurar en `.env`: `EMBEDDING_DEVICE=cuda`. Ollama usa la GPU automáticamente si está disponible. Ver `README.md` sección "Ejecución con GPU".
 
 ---
 

@@ -71,6 +71,7 @@ Este documento describe los requisitos funcionales y no funcionales del sistema 
 | RF-19 | Selector de modelo     | En modo Ollama, la interfaz debe mostrar un selector con los modelos instalados localmente. |
 | RF-20 | Configuración por .env | URL, modelo por defecto, timeout y temperatura deben ser configurables vía archivo `.env`.  |
 | RF-21 | Modelfile por modelo   | Para importar modelos GGUF (p. ej. de LM Studio) a Ollama se requiere **un Modelfile distinto por cada modelo**. Cada Modelfile define la ruta al `.gguf`, la plantilla de chat y los parámetros. Los modelos visión-lenguaje (VL) que incluyen archivo `mmproj` requieren una línea `FROM` adicional en el mismo Modelfile. |
+| RF-22 | Ejecución con GPU      | El sistema debe permitir ejecutar los embeddings en GPU (NVIDIA CUDA) mediante la variable `EMBEDDING_DEVICE=cuda`. En modo llamacpp, `LLAMA_N_GPU_LAYERS=-1` permite cargar todas las capas en GPU. Ollama usa la GPU automáticamente si está disponible. |
 
 
 ### 2.5 Interfaz de usuario
@@ -78,10 +79,10 @@ Este documento describe los requisitos funcionales y no funcionales del sistema 
 
 | ID    | Requisito                             | Descripción                                                                                        |
 | ----- | ------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| RF-22 | Interfaz web Streamlit                | La aplicación debe exponer una interfaz web mediante Streamlit.                                    |
-| RF-23 | Pestañas                              | La interfaz debe organizar el contenido en pestañas: Chat, Informes, Presentaciones, Cuestionario. |
-| RF-24 | Barra lateral                         | La barra lateral debe contener: conexión LLM, modo de respuesta, gestión de documentos.            |
-| RF-25 | Descarga de informes y presentaciones | Los informes y presentaciones generados deben poder descargarse en formato Markdown (.md).         |
+| RF-23 | Interfaz web Streamlit                | La aplicación debe exponer una interfaz web mediante Streamlit.                                    |
+| RF-24 | Pestañas                              | La interfaz debe organizar el contenido en pestañas: Chat, Informes, Presentaciones, Cuestionario. |
+| RF-25 | Barra lateral                         | La barra lateral debe contener: conexión LLM, modo de respuesta, gestión de documentos.            |
+| RF-26 | Descarga de informes y presentaciones | Los informes y presentaciones generados deben poder descargarse en formato Markdown (.md).         |
 
 
 ---
@@ -140,7 +141,7 @@ Este documento describe los requisitos funcionales y no funcionales del sistema 
 
 - **RAM:** mínimo 8 GB; recomendado 16 GB o más para modelos grandes.
 - **Almacenamiento:** espacio suficiente para el modelo de embeddings (~100 MB) y el modelo LLM (varios GB según el modelo).
-- **GPU:** opcional; acelera embeddings y LLM si se configura.
+- **GPU:** opcional; acelera embeddings y LLM si se configura. En Ubuntu con NVIDIA: `EMBEDDING_DEVICE=cuda` en `.env` para embeddings; Ollama usa la GPU automáticamente; para llamacpp, `LLAMA_N_GPU_LAYERS=-1`. Ver documentación de ejecución con GPU en `README.md` y `DISENO_APLICACION.md`.
 
 ### 4.3 Dependencias principales
 
@@ -159,6 +160,7 @@ Este documento describe los requisitos funcionales y no funcionales del sistema 
 | ----------- | ---------------------------------------------------------------------------------------------- |
 | RAG         | Retrieval-Augmented Generation: combina recuperación de documentos con generación de lenguaje. |
 | Modelfile   | Archivo de configuración de Ollama que define un modelo: ruta al GGUF, plantilla de chat y parámetros. Se requiere **uno por cada modelo** a importar. |
+| EMBEDDING_DEVICE | Variable de entorno que indica dónde ejecutar los embeddings: `cpu` (por defecto) o `cuda` (GPU NVIDIA). En Ubuntu con GPU, configurar `EMBEDDING_DEVICE=cuda` en `.env` para acelerar la indexación y las consultas. |
 | Chunk       | Fragmento de texto en el que se divide un documento para la indexación.                        |
 | Embedding   | Representación vectorial de un texto usada para búsqueda semántica.                            |
 | Vectorstore | Almacén de vectores (ChromaDB) que permite búsqueda por similitud.                             |
