@@ -23,6 +23,7 @@ from config import (
 )
 from ingest import index_documents_safe, ingest_folder, load_file
 from llm_provider import is_ollama_backend, is_llamacpp_backend, set_ollama_model
+from prompts_ejemplos import EJEMPLOS_PROMPTS
 from rag_chain import (
     consultar,
     consultar_streaming,
@@ -197,6 +198,48 @@ def main() -> None:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
+        with st.expander("📖 Base de conocimiento: Ejemplos de prompts", expanded=False):
+            st.caption(
+                "Usa estos prompts para obtener mejores respuestas del RAG. "
+                "Haz clic en el icono de copiar junto a cada ejemplo o usa el botón para enviarlo al chat."
+            )
+            for cat, prompts in EJEMPLOS_PROMPTS.items():
+                with st.expander(f"**{cat}**", expanded=False):
+                    for i, (objetivo, texto) in enumerate(prompts):
+                        st.markdown(f"*{objetivo}*")
+                        st.code(texto, language=None)
+                        if st.button(
+                            "Usar este prompt",
+                            key=f"usar_{cat}_{i}",
+                            type="secondary",
+                        ):
+                            st.session_state.prompt_to_use = texto
+                            st.rerun()
+                        if i < len(prompts) - 1:
+                            st.divider()
+
+        if "prompt_to_use" in st.session_state:
+            edited = st.text_area(
+                "Prompt seleccionado (edita si quieres)",
+                value=st.session_state.prompt_to_use,
+                height=120,
+                key="area_prompt_usar",
+            )
+            col1, col2, _ = st.columns([1, 1, 4])
+            with col1:
+                if st.button("Enviar al chat", type="primary", key="btn_enviar_prompt"):
+                    st.session_state.pending_chat_prompt = edited
+                    del st.session_state.prompt_to_use
+                    st.rerun()
+            with col2:
+                if st.button("Cancelar", key="btn_cancelar_prompt"):
+                    del st.session_state.prompt_to_use
+                    st.rerun()
+
+        prompt = st.chat_input("Escribe tu pregunta…")
+        if prompt is None:
+            prompt = st.session_state.pop("pending_chat_prompt", None)
+
         for m in st.session_state.messages:
             with st.chat_message(m["role"]):
                 st.markdown(m["content"])
@@ -205,7 +248,6 @@ def main() -> None:
                         for s in m["sources"]:
                             st.code(s, language=None)
 
-        prompt = st.chat_input("Escribe tu pregunta…")
         if prompt:
             from agent import crear_agente
 
@@ -217,7 +259,7 @@ def main() -> None:
                 sources: list[str] = []
                 if modo.startswith("RAG"):
                     try:
-                        gen, docs = consultar_streaming(prompt, k=4)
+                        gen, docs = consultar_streaming(prompt)
                         text = st.write_stream(gen)
                         sources = _format_sources(docs)
                     except Exception as e:

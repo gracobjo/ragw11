@@ -13,6 +13,12 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     TextLoader,
 )
+
+try:
+    from langchain_community.document_loaders import PyMuPDFLoader
+    _HAS_PYMUPDF = True
+except ImportError:
+    _HAS_PYMUPDF = False
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
@@ -51,7 +57,11 @@ def load_file(path: Path) -> list[Document]:
     path = path.resolve()
     suffix = path.suffix.lower()
     if suffix == ".pdf":
-        loader = PyPDFLoader(str(path))
+        # PyMuPDF extrae el texto completo del PDF (cuerpo, párrafos), no solo metadatos o encabezados.
+        if _HAS_PYMUPDF:
+            loader = PyMuPDFLoader(str(path))
+        else:
+            loader = PyPDFLoader(str(path))
     elif suffix == ".txt":
         loader = TextLoader(str(path), encoding="utf-8")
     elif suffix == ".docx":

@@ -189,6 +189,8 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 ## 5. Flujo de trabajo recomendado (usuarios)
 
+Para una guía detallada del usuario (para qué indexamos y procedimiento paso a paso), véase **[docs/MANUAL_USUARIO_RAG.md](docs/MANUAL_USUARIO_RAG.md)**.
+
 1. **Configuración inicial**
    - Instalar Python, dependencias (`pip install -r requirements.txt`) y Ollama.
    - Ejecutar Ollama. Para usar modelos GGUF de LM Studio: crear **un Modelfile por modelo** en la raíz del proyecto y ejecutar `ollama create nombre -f Modelfile` (véase `Modelfile` y `Modelfile.qwen3vl` de ejemplo).

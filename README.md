@@ -6,6 +6,7 @@ Proyecto alineado con la práctica *Sistema RAG Local con LM Studio y LangChain*
 
 ## Documentación
 
+- **[docs/MANUAL_USUARIO_RAG.md](docs/MANUAL_USUARIO_RAG.md)** — Manual del usuario: para qué indexamos y procedimiento paso a paso.
 - **[ESPECIFICACION_REQUISITOS.md](ESPECIFICACION_REQUISITOS.md)** — Especificación de requisitos funcionales y no funcionales.
 - **[DISENO_APLICACION.md](DISENO_APLICACION.md)** — Diseño de la aplicación: componentes del frontend (para desarrolladores y usuarios) y flujo de trabajo.
 - **[CASOS_DE_USO_UML.md](CASOS_DE_USO_UML.md)** — Casos de uso detallados y diagramas UML (Mermaid): secuencia, componentes, clases, actividad, estados.
@@ -15,6 +16,7 @@ Proyecto alineado con la práctica *Sistema RAG Local con LM Studio y LangChain*
 
 | Tema | Dónde está |
 |------|------------|
+| **Manual del usuario (indexación y procedimiento)** | `docs/MANUAL_USUARIO_RAG.md` |
 | **Configuración general** | `.env.example`, `README.md` |
 | **Modelos locales (embeddings y LLM)** | `DISENO_APLICACION.md` § 5.1 |
 | **Ejecución con GPU** | `README.md` (sección "Ejecución con GPU"), `DISENO_APLICACION.md` § 5.1, `ESPECIFICACION_REQUISITOS.md` (RF-22, glosario), `CASOS_DE_USO_UML.md` (UC-12), `.env.example` |

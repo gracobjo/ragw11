@@ -11,7 +11,13 @@ from typing import Any
 from langchain_classic.chains import RetrievalQA
 from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
-from config import CHROMA_DIR, RETRIEVER_K, ensure_dirs
+from config import (
+    CHROMA_DIR,
+    RETRIEVER_FETCH_K,
+    RETRIEVER_K,
+    RETRIEVER_USE_MMR,
+    ensure_dirs,
+)
 from ingest import get_embeddings
 from llm_provider import get_chat_llm
 
@@ -41,9 +47,19 @@ def get_vectorstore() -> Chroma:
 
 
 def get_retriever(k: int | None = None, source_filter: str | None = None):
-    kwargs: dict = {"k": k or RETRIEVER_K}
+    k_val = k if k is not None else RETRIEVER_K
+    kwargs: dict = {"k": k_val}
     if source_filter:
         kwargs["filter"] = {"source": source_filter}
+    if RETRIEVER_USE_MMR:
+        kwargs["fetch_k"] = min(RETRIEVER_FETCH_K, max(k_val * 3, 20))
+        kwargs["lambda_mult"] = 0.5  # Equilibrio relevancia / diversidad
+        try:
+            return get_vectorstore().as_retriever(
+                search_type="mmr", search_kwargs=kwargs
+            )
+        except Exception:
+            pass  # Fallback a similarity con k aumentado
     return get_vectorstore().as_retriever(search_kwargs=kwargs)
 
 

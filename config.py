@@ -40,7 +40,9 @@ EMBEDDING_DEVICE = os.getenv("EMBEDDING_DEVICE", "cpu").strip().lower()
 
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "500"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "50"))
-RETRIEVER_K = int(os.getenv("RETRIEVER_K", "4"))
+RETRIEVER_K = int(os.getenv("RETRIEVER_K", "8"))
+RETRIEVER_FETCH_K = int(os.getenv("RETRIEVER_FETCH_K", "24"))  # Pool para MMR
+RETRIEVER_USE_MMR = os.getenv("RETRIEVER_USE_MMR", "true").strip().lower() in ("true", "1", "yes")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 
 # Agente ReAct
