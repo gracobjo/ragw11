@@ -50,6 +50,16 @@
 | **ollama_utils.py** | Lista los modelos Ollama disponibles vía API. |
 | **agent.py** | Agente ReAct con herramientas: consultar documentos, fecha actual, estadística del índice. |
 | **api.py** | API REST FastAPI: consultas, indexación, informes, presentaciones, cuestionarios. Documentación Swagger en `/docs`. |
+| **prompts_ejemplos.py** | Base de conocimiento de prompts de ejemplo por categoría (resúmenes, preguntas concretas, extracción, análisis, etc.). Se muestra en el Chat como expander para que el usuario copie o use plantillas. |
+
+### 2.1 Componentes técnicos: PyMuPDF, MMR y parámetros del retriever
+
+| Componente | Para qué sirve |
+|------------|----------------|
+| **PyMuPDF** (`pymupdf` en `requirements.txt`) | Librería para extraer el **texto completo** de los PDF al indexar. Sustituye a `pypdf` como loader principal porque obtiene mejor el cuerpo del documento (párrafos, listas) y no solo metadatos o encabezados. Sin una buena extracción, el RAG respondería con información limitada. |
+| **MMR** (Maximal Marginal Relevance) | Algoritmo de recuperación que combina **relevancia** (chunks similares a la pregunta) con **diversidad** (chunks de distintos documentos). Sin MMR, los k chunks más similares pueden venir todos del mismo documento; con MMR se favorece incluir varios documentos en cada respuesta. Configurable con `RETRIEVER_USE_MMR`, `RETRIEVER_K` y `RETRIEVER_FETCH_K` en `.env`. |
+| **RETRIEVER_K** (por defecto 8) | Número de chunks que se recuperan por consulta. Mayor k = más contexto para el LLM y más probabilidad de abarcar varios documentos. |
+| **RETRIEVER_FETCH_K** | Tamaño del pool de candidatos antes de aplicar MMR. Debe ser mayor que k para que MMR pueda elegir chunks diversos. |
 
 ---
 
@@ -133,9 +143,10 @@ La interfaz está organizada en una **barra lateral** y **cuatro pestañas** pri
 
 | Elemento | Para desarrolladores | Para usuarios |
 |----------|----------------------|---------------|
+| **Base de conocimiento: Ejemplos de prompts** (expander) | Muestra `EJEMPLOS_PROMPTS` de `prompts_ejemplos.py` por categoría. Cada ejemplo incluye botón «Usar este prompt» que precarga el texto antes de enviar. | Ayuda a formular preguntas efectivas al RAG (resúmenes, preguntas concretas, extracción, análisis, prompts a evitar, etc.). |
 | **Historial de mensajes** | `st.session_state.messages` guarda `{role, content, sources}`. Se renderiza con `st.chat_message`. | Muestra la conversación que mantienes con el asistente. |
 | **Chat input** | Al enviar, según el modo llama a `consultar_streaming()` o `crear_agente().invoke()`. | Escribe tu pregunta y pulsa Enter. |
-| **Fuentes recuperadas** (expander) | Lista las rutas de `source_documents` formateadas con `_format_sources()`. | Permite ver de qué documentos se ha extraído la información usada en la respuesta. |
+| **Fuentes recuperadas** (expander) | Lista las rutas de `source_documents` formateadas con `_format_sources()`. Con MMR, suelen provenir de varios documentos distintos. | Permite ver de qué documentos se ha extraído la información usada en la respuesta. |
 
 **Qué hacer (usuario):** Escribe preguntas sobre tus documentos. Revisa “Fuentes recuperadas” si quieres saber de dónde sale la información.
 
@@ -213,8 +224,8 @@ Para una guía detallada del usuario (para qué indexamos y procedimiento paso a
 
 | Archivo | Uso |
 |---------|-----|
-| **.env** | `LLM_BACKEND`, `OLLAMA_MODEL`, `OLLAMA_BASE_URL`, etc. |
-| **requirements.txt** | Dependencias principales. |
+| **.env** | `LLM_BACKEND`, `OLLAMA_MODEL`, `OLLAMA_BASE_URL`, `RETRIEVER_K`, `RETRIEVER_USE_MMR`, `RETRIEVER_FETCH_K`, etc. |
+| **requirements.txt** | Dependencias principales. Incluye `pymupdf` para extracción de texto de PDF. |
 | **requirements-llamacpp.txt** | Dependencias para modo GGUF/llama-cpp. |
 | **run.sh** | Script de arranque en Ubuntu/Linux. |
 | **run.bat** | Script de arranque en Windows. |
